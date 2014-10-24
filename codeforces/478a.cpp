@@ -1,7 +1,7 @@
-//#include GRAPH
 //#define DEBUG       //comment when you have to disable all debug macros.
 //#define LOCAL     //uncomment for testing from local file
-#define NDEBUG    //comment when all assert statements have to be disabled.
+#define NDEBUG    //comment when all assert statements have to be enabled.
+//#define GRAPH
 #include <iostream>
 #include <cstring>
 #include <sstream>
@@ -44,19 +44,34 @@
 using namespace std;
 
 
+#ifdef DEBUG
+#define debug(args...)            {dbg,args; cerr<<endl;}
+#else
+#define debug(args...)              // Just strip off all debug tokens
+#endif
+
+#ifdef GRAPH
+#include "drawGraph.cpp"
+#endif
+
+struct debugger
+{
+    template<typename T> debugger& operator , (const T& v)
+    {    
+        cerr<<v<<" ";    
+        return *this;    
+    }
+
+}dbg;
 
 int main()
 {
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-     lld n;
-     cin>>n;
-     if(n%2)printf("9 %lld\n",n-9);
-     else if(n%4==0)printf("%lld %lld\n",n/2,n/2);
-     else printf("6 %lld\n",n-6);
-     
-     
-         
-     
+     lld a1,a2,a3,a4,a5;
+     cin>>a1>>a2>>a3>>a4>>a5;
+     a1+=a2+a3+a4+a5;
+     if(a1%5 || (a1==0 && a2==0 && a3==0 && a4==0 && a5==0))cout<<"-1\n";
+     else cout<<(a1/5)<<"\n";
 }

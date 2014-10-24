@@ -1,7 +1,6 @@
-
 //#include GRAPH
 //#define DEBUG       //comment when you have to disable all debug macros.
-#define LOCAL     //uncomment for testing from local file
+//#define LOCAL     //uncomment for testing from local file
 #define NDEBUG    //comment when all assert statements have to be disabled.
 #include <iostream>
 #include <cstring>
@@ -69,28 +68,27 @@ int main()
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-	 lld n,p,i;
-	 cin>>n>>p;
-	 bool arr[101];
-	 fill(arr,arr+101,true);
-	 while(p--){
-		 cin>>i;
-		 debug(i);
-		 arr[i]=false;
-	 }
-	 cin>>p;
-	 while(p--){
-		 cin>>i;
-		 debug(i);
-		 arr[i]=false;
-	 }
-	 for(i=1;i<=n;i++){
-		 debug("ddd",arr[i]);
-		 if(arr[i]){
-			 printf("Oh, my keyboard!\n");
-			 return 0;
-		 }
-	 }
-	 printf("I become the guy.\n");
+     lld n,p,i;
+     cin>>n>>p;
+     bool arr[101];
+     fill(arr,arr+101,true);
+     while(p--){
+         cin>>i;
+         debug(i);
+         arr[i]=false;
+     }
+     cin>>p;
+     while(p--){
+         cin>>i;
+         debug(i);
+         arr[i]=false;
+     }
+     for(i=1;i<=n;i++){
+         debug("ddd",arr[i]);
+         if(arr[i]){
+             printf("Oh, my keyboard!\n");
+             return 0;
+         }
+     }
+     printf("I become the guy.\n");
 }
-

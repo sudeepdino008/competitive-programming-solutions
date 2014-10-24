@@ -1,7 +1,8 @@
-//#include GRAPH
+
 //#define DEBUG       //comment when you have to disable all debug macros.
 //#define LOCAL     //uncomment for testing from local file
-#define NDEBUG    //comment when all assert statements have to be disabled.
+#define NDEBUG    //comment when all assert statements have to be enabled.
+//#define GRAPH
 #include <iostream>
 #include <cstring>
 #include <sstream>
@@ -44,19 +45,55 @@
 using namespace std;
 
 
+#ifdef DEBUG
+#define debug(args...)            {dbg,args; cerr<<endl;}
+#else
+#define debug(args...)              // Just strip off all debug tokens
+#endif
 
-int main()
+#ifdef GRAPH
+#include "drawGraph.cpp"
+#endif
+
+struct debugger
 {
+    template<typename T> debugger& operator , (const T& v)
+    {    
+        cerr<<v<<" ";    
+        return *this;    
+    }
+
+}dbg;
+
+
+typedef struct a{
+    lld a, b;
+}dates;
+
+lld n;
+dates arr[5001];
+
+bool compare(a x, a y){
+    return x.a<y.a || (x.a==y.a && x.b<y.b);
+}
+
+int main(){
+    
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-     lld n;
-     cin>>n;
-     if(n%2)printf("9 %lld\n",n-9);
-     else if(n%4==0)printf("%lld %lld\n",n/2,n/2);
-     else printf("6 %lld\n",n-6);
-     
-     
-         
-     
+    lld i,val;
+    scanf("%lld",&n);
+
+    for(i=1;i<=n;i++)scanf("%lld %lld",&arr[i].a, &arr[i].b);
+
+    sort(arr+1,arr+n+1, compare);
+
+    val = arr[1].b;
+    for(i=2;i<=n;i++){
+        if(arr[i].b>=val)val=arr[i].b;
+        else val=arr[i].a;
+    }
+//  debug("aaa");
+    printf("%lld\n",val);
 }

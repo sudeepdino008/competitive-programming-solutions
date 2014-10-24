@@ -1,7 +1,9 @@
-//#include GRAPH
+
+
 //#define DEBUG       //comment when you have to disable all debug macros.
 //#define LOCAL     //uncomment for testing from local file
-#define NDEBUG    //comment when all assert statements have to be disabled.
+#define NDEBUG    //comment when all assert statements have to be enabled.
+//#define GRAPH
 #include <iostream>
 #include <cstring>
 #include <sstream>
@@ -34,6 +36,7 @@
 #define all(x) x.begin(), x.end()
 #define pb push_back
 #define mp make_pair
+#define clr(x,y) sizeof(z,y,sizeof x)
 #define log2(x) (log(x)/log(2))
 #define ARRAY_SIZE(arr) (1[&arr]-arr)      
 #define INDEX(arr,elem)        (lower_bound(all(arr),elem)-arr.begin())
@@ -44,19 +47,52 @@
 using namespace std;
 
 
+#ifdef DEBUG
+#define debug(args...)            {dbg,args; cerr<<endl;}
+#else
+#define debug(args...)              // Just strip off all debug tokens
+#endif
+
+#ifdef GRAPH
+#include "drawGraph.cpp"
+#endif
+
+struct debugger
+{
+    template<typename T> debugger& operator , (const T& v)
+    {    
+        cerr<<v<<" ";    
+        return *this;    
+    }
+
+}dbg;
+
+lld cnt1, cnt2, x,y;
+
+inline bool expression(lld n){
+	if(n-n/x>=cnt1 && n-n/y>=cnt2 && cnt1+cnt2+n/(x*y)-n<=0)return true;
+	return false;
+}
 
 int main()
 {
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-     lld n;
-     cin>>n;
-     if(n%2)printf("9 %lld\n",n-9);
-     else if(n%4==0)printf("%lld %lld\n",n/2,n/2);
-     else printf("6 %lld\n",n-6);
-     
-     
-         
-     
+	 
+	 cin>>cnt1>>cnt2>>x>>y;
+	
+	 lld start=1, end=1e18,mid,ans;
+	 debug(expression(82));
+	 while(start<=end){
+		 mid = (start+end)/2;
+		 if(expression(mid)){
+			 ans = mid;
+			 end = mid-1;
+		 }
+		 else start=mid+1;
+	 }
+
+	 printf("%lld\n",ans);
 }
+

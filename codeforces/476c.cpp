@@ -1,7 +1,6 @@
-
 //#define GRAPH
-#define DEBUG       //comment when you have to disable all debug macros.
-#define LOCAL     //uncomment for testing from local file
+//#define DEBUG       //comment when you have to disable all debug macros.
+//#define LOCAL     //uncomment for testing from local file
 #define NDEBUG    //comment when all assert statements have to be enabled.
 #include <iostream>
 #include <cstring>
@@ -68,18 +67,18 @@ struct debugger
 
 lld expo(lld a, lld n, lld m)
 {
-	if(n==0)
-		return 1;
-	lld p=expo(a,n/2,m);
-	if(n%2==0)
-		return (p*p)%m;
-	else
-		return (((p*p)%m)*a)%m;
+    if(n==0)
+        return 1;
+    lld p=expo(a,n/2,m);
+    if(n%2==0)
+        return (p*p)%m;
+    else
+        return (((p*p)%m)*a)%m;
 }
 
 lld inverse_modulo(lld a, lld m)
 {
-	return expo(a,m-2,m);
+    return expo(a,m-2,m);
 }
 
 
@@ -88,13 +87,12 @@ int main()
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-	 lld a, b, ans;
-	 cin>>a>>b;
-	 ans = (a*b+b+2)%MOD;
-	 ans = (ans*(b-1))%MOD;
-	 ans = (ans*a)%MOD;
-	 ans = (ans*b)%MOD;
-	 ans = (ans*inverse_modulo(4,MOD))%MOD;
-	 cout<<ans<<"\n";
+     lld a, b, ans;
+     cin>>a>>b;
+     ans = (a*b+b+2)%MOD;
+     ans = (ans*(b-1))%MOD;
+     ans = (ans*a)%MOD;
+     ans = (ans*b)%MOD;
+     ans = (ans*inverse_modulo(4,MOD))%MOD;
+     cout<<ans<<"\n";
 }
-

@@ -1,7 +1,9 @@
-//#include GRAPH
+
+
 //#define DEBUG       //comment when you have to disable all debug macros.
 //#define LOCAL     //uncomment for testing from local file
-#define NDEBUG    //comment when all assert statements have to be disabled.
+#define NDEBUG    //comment when all assert statements have to be enabled.
+//#define GRAPH
 #include <iostream>
 #include <cstring>
 #include <sstream>
@@ -43,6 +45,7 @@
 #define equals(a,b) (a.compareTo(b)==0)    //for strings only
 using namespace std;
 
+
 #ifdef DEBUG
 #define debug(args...)            {dbg,args; cerr<<endl;}
 #else
@@ -63,25 +66,52 @@ struct debugger
 
 }dbg;
 
+bool check(char ch, char x, bool &b){
+	if(ch==x){
+		if(b)return false;
+		else return b=true;
+	}
+	return false;
+}
 int main()
 {
 #ifdef LOCAL
     freopen("input.in","r",stdin);
 #endif
-     string s1,s2;
-     cin>>s1>>s2;
-     lld nump, numn, len = s1.length(),i;
-     nump=numn=0;
-     for(i=0;i<len;i++){
-         if(s1[i]=='+')nump++;
-         else if(s1[i]=='-')numn++;
-         if(s2[i]=='+')nump--;
-         else if(s2[i]=='-')numn--;
-     }
-     lld f[len+1];
-     f[0]=1;
-     for(i=1;i<=len;i++)f[i]=f[i-1]*i;
-     double val = f[nump+numn]/(f[nump]*f[numn]);
-     val = val/(1.0*(1<<(nump+numn)));
-     cout<<fixed<<setprecision(11)<<val<<"\n";
+	 bool p1, p6, p8, p9,flag=true;
+	 lld zeroCount=0;
+	 string val[]={"1869", "1896", "9168", "1698", "6198", "8619", "1968"};
+	 p1=p6=p8=p9=false;
+	 string str,answer="";
+	 cin>>str;
+	 lld i, len=str.length(), modulo=0;
+	 for(i=0;i<len;i++){
+		 if(check(str[i], '1', p1))continue;
+		 if(check(str[i], '6', p6))continue;
+		 if(check(str[i], '8', p8))continue;
+		 if(check(str[i], '9', p9))continue;
+		 if(flag && str[i]=='0'){
+			 zeroCount++;
+			 continue;
+		 }
+		 else flag=false;
+		 modulo=(10*modulo+str[i]-'0')%7;
+		 answer+=str[i];
+	 }
+	 modulo=(modulo*4)%7;
+	 debug(zeroCount, modulo, answer);
+	 if(answer=="")
+	 {
+		 answer+=val[modulo];
+		 for(;zeroCount;zeroCount--)modulo=(10*modulo)%7, answer+="0";
+	 }
+	 else {
+		 for(;zeroCount;zeroCount--)modulo=(10*modulo)%7, answer+="0";
+		 answer+=val[modulo];
+	 }
+
+	 
+
+	 cout<<answer<<"\n";
 }
+

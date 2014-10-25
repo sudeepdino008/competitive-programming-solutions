@@ -1,6 +1,11 @@
+#define DEBUG       //comment when you have to disable all debug macros.
+#define LOCAL     //uncomment for testing from local file
+#define NDEBUG    //comment when all assert statements have to be enabled.
+//#define GRAPH
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -11,73 +16,101 @@
 #include <climits>
 #include <ctime>
 #include <algorithm>
+#include <functional>
 #include <stack>
 #include <queue>
 #include <list>
+#include <deque>
 #include <sys/time.h>
 #include <iomanip>
-//#define NDEBUG    //when all assert statements have to be disabled
+#include <cstdarg>
+#include <utility> //std::pair
 #include <cassert>
-#define tr(c,i) for(typeof((c).begin()) i = (c).begin(); i != (c).end(); i++) 
+#define fd(i,a) for(i=1;i<=a;i++)
+#define fa(i,a,b) for(i=a;i<=b;i++)
+#define fs(i,a,b,c) for(i=a;i<=b;i+=c)
+#define tr(c,i) for(typeof(c.begin()) i = (c).begin(); i != (c).end(); i++) 
 #define present(c,x) ((c).find(x) != (c).end()) 
+#define all(x) x.begin(), x.end()
+#define pb push_back
+#define mp make_pair
+#define log2(x) (log(x)/log(2))
 #define ARRAY_SIZE(arr) (1[&arr]-arr)      
+#define INDEX(arr,elem)        (lower_bound(all(arr),elem)-arr.begin())
 #define lld long long int
 #define MOD 1000000007
+#define gcd __gcd
+#define equals(a,b) (a.compareTo(b)==0)    //for strings only
 using namespace std;
 
 
-//using heuristics by weight and path compression to improve running time
-typedef struct n{
-	struct n *parent;
-	int u,v,weight;
-	int rank;        //if node is the parent, it keeps track of number of children. if not, it is -1.
+#ifdef DEBUG
+#define debug(args...)            {dbg,args; cerr<<endl;}
+#else
+#define debug(args...)              // Just strip off all debug tokens
+#endif
+
+#ifdef GRAPH
+#include "drawGraph.cpp"
+#endif
+
+struct debugger
+{
+    template<typename T> debugger& operator , (const T& v)
+    {    
+        cerr<<v<<" ";    
+        return *this;    
+    }
+
+}dbg;
+
+typedef struct s{
+	struct s *parent;
+	lld val, rank;
 }node;
 
-node* MAKE(int u, int v, int weight)
-{
-	node *n=(node*)malloc(sizeof(node));
-	n->parent=n;
-	n->u=u;
-	n->v=v;
-	n->weight=weight;
-	n->rank=0;
-	return n;
+node *makeSet(lld n){
+	node *nod = (node*)malloc(sizeof(node));
+	nod->parent = nod;
+	nod->val = n;
+	nod->rank = 0;
+	return nod;
 }
 
-node *FIND(node *n)
-{
-	if(n->parent==n)
-		return n;
-	n->parent=FIND(n->parent);
-	return n->parent;
+node *findSet(node *x){
+	if(x->parent!=x)x->parent = findSet(x->parent); //path compression
+	return x->parent;
 }
 
-void MERGE(node *n1, node *n2)     //merge n1 and n2 and store in n1.
-{
-	assert(n1->rank!=-1);
-	assert(n2->rank!=-1);
-	if(n1->rank<n2->rank)
-	{
-		MERGE(n2,n1);
-		return ;
+void link(node *x1, node *x2){  //using union by rank heuristic
+	if(x1->rank>x2->rank){
+		x2->parent = x1;
 	}
-	n2->parent=n1;
-	n1->rank=n1->rank+n2->rank+1;
-	n2->rank=-1;
+	else{
+		x1->parent = x2;
+		if(x1->rank==x2->rank)x2->rank++;  
+	}
+}
+
+void merge(node *x1, node *x2){    //link set pointed by node x2 to x1 and delete x2
+	link(findSet(x1), findSet(x2));
 }
 
 int main()
 {
-	node *n1=MAKE(1,2,100);
-	node *n2=MAKE(2,3,300);
-	node *n3=MAKE(4,5,600);
-	node *n4=MAKE(1,5,500);
-	MERGE(n1,n2);
-	MERGE(n3,n4);
-	MERGE(n1,n3);
-	node *n5=FIND(n4);
-	cout<<n1->weight<<" "<<n1->parent->weight<<endl;
-	cout<<n2->weight<<" "<<n2->parent->weight<<endl;
-	cout<<n3->weight<<" "<<n3->parent->weight<<endl;
-	cout<<n4->weight<<" "<<n4->parent->weight<<endl;
+#ifdef LOCAL
+    freopen("input.in","r",stdin);
+#endif
+	 node *n1 = makeSet(1), *n2=makeSet(2), *n3=makeSet(3), *n4=makeSet(4), *n5=makeSet(5);
+	 debug(n1->val, n3->val, n5->val);
+	 assert(n3->val==3);
+	 merge(n1,n2);  //n2 gone
+	 debug(findSet(n1)->val, n2->val);
+	 merge(n4,n5);
+	 debug(findSet(n5)->val, n5->val);
+	 merge(n1, n4);
+	 debug(findSet(n1)->val, findSet(n2)->val, findSet(n3)->val, findSet(n4)->val, findSet(n5)->val);
+	 
 }
+
+
